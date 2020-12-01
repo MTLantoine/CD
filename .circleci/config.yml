@@ -24,7 +24,9 @@ jobs:
       - checkout
       - restore_cache:
           key: dependencies-{{ checksum "package.json" }}-{{ .Environment.CACHE_VERSION }}
-      - command: echo 'export HTTPCODE=`curl -s -o /dev/null -w "%{http_code}" https://$HEROKU_APP_NAME.herokuapp.com/`'
+      - run:
+          name: "Setup custom environment variables"
+          command: echo 'export HTTPCODE=`curl -s -o /dev/null -w "%{http_code}" https://$HEROKU_APP_NAME.herokuapp.com/`'
   lint:
     docker:
       - image: circleci/node:dubnium-browsers
