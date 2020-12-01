@@ -24,15 +24,13 @@ jobs:
       - checkout
       - restore_cache:
           key: dependencies-{{ checksum "package.json" }}-{{ .Environment.CACHE_VERSION }}
-      - run:
-          name: "Setup custom environment variables"
-          command: echo 'export HTTPCODE=`curl -s -o /dev/null -w "%{http_code}" https://$HEROKU_APP_NAME.herokuapp.com/`'
       - deploy:
           name: run a failing deploy
           command: |
             if [[ "$HTTPCODE" -ne 200 ]]; then
               echo "heroku app not responding, failing deploy" \
               exit 1 \
+              HTTPCODE=`curl -s -o /dev/null -w "%{http_code}" https://$HEROKU_APP_NAME.herokuapp.com/`
             fi
   lint:
     docker:
@@ -72,7 +70,7 @@ jobs:
           at: /tmp
       - run:
           name: Deploy app
-          command: echo todo && false
+          command: echo todo
   back-test-unit:
     docker:
       - image: circleci/node:dubnium-browsers
@@ -139,10 +137,10 @@ jobs:
       - checkout
       - run:
           name: Heroku Deploy
-          command: echo todo && false
+          command: echo todo
       - run:
           name: Smoke Test
-          command: echo todo && false
+          command: echo todo
 
 workflows:
   version: 2
