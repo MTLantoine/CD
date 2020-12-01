@@ -131,45 +131,45 @@ workflows:
   build-test-and-lint:
     jobs:
       - build
-      - back-test-unit:
-          requires:
-            - build
-      - back-test-e2e:
-          requires:
-            - build
-      - lint:
-          requires:
-            - build
-      - docker-build-and-push:
-          requires:
-            - build
-            - lint
-            - back-test-e2e
-            - back-test-unit
-          filters:
-            branches:
-              only: main
-      - back-deploy-heroku:
-          requires:
-            - build
-            - lint
-            - back-test-e2e
-            - back-test-unit
-          filters:
-            branches:
-              only: main
-      - server-doc-build:
-          requires:
-            - build
-            - lint
-            - back-test-e2e
-            - back-test-unit
-          filters:
-            branches:
-              only: main
-      - server-doc-deploy:
-          requires:
-            - server-doc-build
-          filters:
-            branches:
-              only: main
+      # - back-test-unit:
+      #     requires:
+      #       - build
+      # - back-test-e2e:
+      #     requires:
+      #       - build
+      # - lint:
+      #     requires:
+      #       - build
+      # - docker-build-and-push:
+      #     requires:
+      #       - build
+      #       - lint
+      #       - back-test-e2e
+      #       - back-test-unit
+      #     filters:
+      #       branches:
+      #         only: main
+      # - back-deploy-heroku:
+      #     requires:
+      #       - build
+      #       - lint
+      #       - back-test-e2e
+      #       - back-test-unit
+      #     filters:
+      #       branches:
+      #         only: main
+      # - server-doc-build:
+      #     requires:
+      #       - build
+      #       - lint
+      #       - back-test-e2e
+      #       - back-test-unit
+      #     filters:
+      #       branches:
+      #         only: main
+      # - server-doc-deploy:
+      #     requires:
+      #       - server-doc-build
+      #     filters:
+      #       branches:
+      #         only: main
