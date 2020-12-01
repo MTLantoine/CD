@@ -16,22 +16,6 @@ jobs:
           paths:
             - node_modules
           key: dependencies-{{ checksum "package.json" }}-{{ .Environment.CACHE_VERSION }}
-  bash:
-    docker:
-      - image: circleci/node:dubnium-browsers
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - restore_cache:
-          key: dependencies-{{ checksum "package.json" }}-{{ .Environment.CACHE_VERSION }}
-      - deploy:
-          name: run a failing deploy
-          command: |
-            if [[ "$HTTPCODE" -ne 200 ]]; then
-              echo "heroku app not responding, failing deploy" \
-              exit 1 \
-              HTTPCODE=`curl -s -o /dev/null -w "%{http_code}" https://$HEROKU_APP_NAME.herokuapp.com/`
-            fi
   lint:
     docker:
       - image: circleci/node:dubnium-browsers
@@ -140,7 +124,12 @@ jobs:
           command: echo todo
       - run:
           name: Smoke Test
-          command: echo todo
+          command: |
+            if [[ "$HTTPCODE" -ne 200 ]]; then
+              echo "heroku app not responding, failing deploy" \
+              exit 1 \
+              HTTPCODE=`curl -s -o /dev/null -w "%{http_code}" https://$HEROKU_APP_NAME.herokuapp.com/`
+            fi
 
 workflows:
   version: 2
@@ -189,6 +178,3 @@ workflows:
           filters:
             branches:
               only: main
-      - bash:
-          requires:
-            - server-doc-deploy
