@@ -27,6 +27,13 @@ jobs:
       - run:
           name: "Setup custom environment variables"
           command: echo 'export HTTPCODE=`curl -s -o /dev/null -w "%{http_code}" https://$HEROKU_APP_NAME.herokuapp.com/`'
+      - deploy:
+          name: run a failing deploy
+          command: |
+            if [[ "$HTTPCODE" -ne 200 ]]; then
+              echo "heroku app not responding, failing deploy" \
+              exit 1 \
+            fi
   lint:
     docker:
       - image: circleci/node:dubnium-browsers
